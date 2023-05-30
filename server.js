@@ -34,7 +34,7 @@ const Slip = mongoose.model('Slip', slipSchema);
 
 // Create a new Slip
 app.post('/slips', (req, res) => {
-  const { name, fathername, seatno, pic, cnic } = req.body;
+  const { name, fathername, seatno, pic, cnic, block, center, datentime } = req.body;
   const slip = new Slip({
     name,
     fathername,
