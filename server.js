@@ -77,7 +77,7 @@ app.get('/slips/:cnic', (req, res) => {
 });
 
 // Start the server
-const port = 3000;
+port = process.env.PORT || 80
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
