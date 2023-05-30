@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Slip Generator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    .form-container {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+    }
+
+    .form-container input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+
+    .form-container button {
+      width: 100%;
+      padding: 10px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    .slip-container {
+      max-width: 500px;
+      margin: 20px auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+    }
+
+    .slip-container img {
+      max-width: 200px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <input type="text" id="cnicInput" placeholder="Enter CNIC">
+    <button onclick="generateSlip()">Generate Slip</button>
+  </div>
+
+  <div class="slip-container" id="slipContainer">
+    <h2>Slip Details</h2>
+    <img id="pic" src="" alt="Slip Image">
+    <p id="name"></p>
+    <p id="fathername"></p>
+    <p id="seatno"></p>
+    <p id="cnic"></p>
+  </div>
+
+  <script>
+    function generateSlip() {
+      const cnicInput = document.getElementById('cnicInput');
+      const cnic = cnicInput.value;
+
+      fetch(`localhost:3000/slips/${cnic}`)
+        .then(response => response.json())
+        .then(data => {
+          const slipContainer = document.getElementById('slipContainer');
+          const pic = document.getElementById('pic');
+          const name = document.getElementById('name');
+          const fathername = document.getElementById('fathername');
+          const seatno = document.getElementById('seatno');
+          const cnic = document.getElementById('cnic');
+
+          pic.src = data.pic;
+          name.innerText = `Name: ${data.name}`;
+          fathername.innerText = `Father's Name: ${data.fathername}`;
+          seatno.innerText = `Seat No: ${data.seatno}`;
+          cnic.innerText = `CNIC: ${data.cnic}`;
+
+          slipContainer.style.display = 'block';
+        })
+        .catch(error => {
+          console.error(error);
+          alert('Failed to generate slip. Please try again.');
+        });
+    }
+  </script>
+</body>
+</html>
