@@ -25,6 +25,10 @@ const slipSchema = new mongoose.Schema({
   seatno: Number,
   pic: String,
   cnic: Number,
+  block: Number,
+  center: String,
+  datentime : String,
+
 });
 const Slip = mongoose.model('Slip', slipSchema);
 
@@ -37,6 +41,9 @@ app.post('/slips', (req, res) => {
     seatno,
     pic,
     cnic,
+    block,
+    center,
+    datentime,
   });
   slip.save()
     .then(() => {

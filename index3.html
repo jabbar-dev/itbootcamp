@@ -37,11 +37,19 @@
       margin: 20px auto;
       padding: 20px;
       border: 1px solid #ccc;
+      border-width: 4px;
     }
 
     .slip-container img {
       max-width: 200px;
       margin-bottom: 10px;
+    }
+
+    .print-button {
+      text-align: center;
+      padding-top: 20px;
+      border-top: 1px solid #ccc;
+      font-weight: bold;
     }
   </style>
 </head>
@@ -51,59 +59,49 @@
     <button onclick="generateSlip()">Generate Slip</button>
   </div>
 
-  <div class="slip-container" id="slipContainer">
-    <h2>Slip Details</h2>
-    <img id="pic" src="" alt="Slip Image">
+  <div class="slip-container" id="slipContainer" style="display: none;">
+    <div class="header-slip">
+        <img src="https://apply.sts.net.pk/assets/images/logos/logo.png" alt="STS Logo" width="100px" style="display: inline;">
+        <p class="float-left" style="margin-left: 10px; font-weight: bold; display: inline;">SIBA Testing Service</p>
+    </div>
+    <img id="pic" src="" alt="Slip Image" width="100px" height="100px">
     <p id="name"></p>
     <p id="fathername"></p>
     <p id="seatno"></p>
     <p id="cnic"></p>
-    <button onclick="downloadSlip()">Download Slip</button>
+  </div>
+
+  <div class="print-button">
+    <button onclick="printSlip()">Print Slip</button>
   </div>
 
   <script>
     function initializeJsPDF() {
       window.jspdf = window.jspdf || window.jspdf.jsPDF;
     }
-
+  
     initializeJsPDF();
-
-    function downloadSlip() {
-  const slipContainer = document.getElementById('slipContainer');
-  const pdf = new window.jspdf.jsPDF();
-
-  // Get the HTML content of the slip container
-  const containerHtml = slipContainer.innerHTML;
-
-  // Load the image separately
-  const pic = document.getElementById('pic');
-
-  const canvas = document.createElement('canvas');
-  const context = canvas.getContext('2d');
-  canvas.width = pic.width;
-  canvas.height = pic.height;
-  context.drawImage(pic, 0, 0, pic.width, pic.height);
-
-  // Convert the image to Base64 data URL
-  const imgData = canvas.toDataURL('image/jpeg');
-
-  // Generate the PDF using html2pdf library
-  html2pdf()
-    .set({ html2canvas: { scale: 2 } })
-    .from(containerHtml)
-    .then(function (canvas) {
-      pdf.addImage(imgData, 'JPEG', 10, 10, 50, 50); // Add the image to the PDF
-      pdf.addPage();
-      pdf.addHTML(canvas); // Add the HTML content to the PDF
-      pdf.save('slip.pdf');
-    });
-}
-
-
+  
+    function printSlip() {
+      const slipContainer = document.getElementById('slipContainer');
+      const containerHtml = slipContainer.innerHTML;
+  
+      const printWindow = window.open('', '_blank');
+      printWindow.document.open();
+      printWindow.document.write('<html><head><title>Print Slip</title></head><body>');
+      printWindow.document.write(containerHtml);
+      printWindow.document.write('</body></html>');
+      printWindow.document.close();
+      printWindow.onload = function() {
+        printWindow.print();
+        printWindow.close();
+      };
+    }
+  
     function generateSlip() {
       const cnicInput = document.getElementById('cnicInput');
       const cnic = cnicInput.value;
-
+  
       fetch(`https://itbootcamp-sibau.herokuapp.com/slips/${cnic}`)
         .then(response => response.json())
         .then(data => {
@@ -112,15 +110,18 @@
           const name = document.getElementById('name');
           const fathername = document.getElementById('fathername');
           const seatno = document.getElementById('seatno');
-          const cnic = document.getElementById('cnic');
-
+          const cnicElement = document.getElementById('cnic');
+  
+          pic.onload = function() {
+            name.innerText = `Name: ${data.name}`;
+            fathername.innerText = `Father's Name: ${data.fathername}`;
+            seatno.innerText = `Seat No: ${data.seatno}`;
+            cnicElement.innerText = `CNIC: ${data.cnic}`;
+            slipContainer.style.display = 'block';
+            slipContainer.style.padding = '50px';
+          };
+  
           pic.src = data.pic;
-          name.innerText = `Name: ${data.name}`;
-          fathername.innerText = `Father's Name: ${data.fathername}`;
-          seatno.innerText = `Seat No: ${data.seatno}`;
-          cnic.innerText = `CNIC: ${data.cnic}`;
-
-          slipContainer.style.display = 'block';
         })
         .catch(error => {
           console.error(error);
@@ -130,5 +131,3 @@
   </script>
 </body>
 </html>
-
-

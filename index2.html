@@ -52,15 +52,25 @@
   </div>
 
   <div class="slip-container" id="slipContainer">
-    <h2>Slip Details</h2>
-    <img id="pic" src="" alt="Slip Image">
+    
+    <div class="header-slip">
+        <img src="https://apply.sts.net.pk/assets/images/logos/logo.png" alt="STS Logo" width="100px">
+
+        <p class="float-left">SIBA Testing Service</p>
+    </div>
+   
+    <img id="pic" src="" alt="Slip Image" width="100px" height="100px">
     <p id="name"></p>
     <p id="fathername"></p>
     <p id="seatno"></p>
     <p id="cnic"></p>
-    <button onclick="downloadSlip()">Download Slip</button>
+    
   </div>
-
+  <div class="center">
+     <center>
+<button onclick="downloadSlip()">Download Slip</button>
+</center>
+</div>
   <script>
     function initializeJsPDF() {
       window.jspdf = window.jspdf || window.jspdf.jsPDF;
@@ -69,36 +79,17 @@
     initializeJsPDF();
 
     function downloadSlip() {
-  const slipContainer = document.getElementById('slipContainer');
-  const pdf = new window.jspdf.jsPDF();
+      const slipContainer = document.getElementById('slipContainer');
 
-  // Get the HTML content of the slip container
-  const containerHtml = slipContainer.innerHTML;
+      // Get the HTML content of the slip container
+      const containerHtml = slipContainer.innerHTML;
 
-  // Load the image separately
-  const pic = document.getElementById('pic');
-
-  const canvas = document.createElement('canvas');
-  const context = canvas.getContext('2d');
-  canvas.width = pic.width;
-  canvas.height = pic.height;
-  context.drawImage(pic, 0, 0, pic.width, pic.height);
-
-  // Convert the image to Base64 data URL
-  const imgData = canvas.toDataURL('image/jpeg');
-
-  // Generate the PDF using html2pdf library
-  html2pdf()
-    .set({ html2canvas: { scale: 2 } })
-    .from(containerHtml)
-    .then(function (canvas) {
-      pdf.addImage(imgData, 'JPEG', 10, 10, 50, 50); // Add the image to the PDF
-      pdf.addPage();
-      pdf.addHTML(canvas); // Add the HTML content to the PDF
-      pdf.save('slip.pdf');
-    });
-}
-
+      // Generate the PDF using html2pdf library
+      html2pdf()
+        .set({ html2canvas: { scale: 2 } })
+        .from(containerHtml)
+        .save('slip.pdf');
+    }
 
     function generateSlip() {
       const cnicInput = document.getElementById('cnicInput');
@@ -112,14 +103,14 @@
           const name = document.getElementById('name');
           const fathername = document.getElementById('fathername');
           const seatno = document.getElementById('seatno');
-          const cnic = document.getElementById('cnic');
+          const cnicElement = document.getElementById('cnic');
 
           pic.src = data.pic;
+          
           name.innerText = `Name: ${data.name}`;
-          fathername.innerText = `Father's Name: ${data.fathername}`;
+                    fathername.innerText = `Father's Name: ${data.fathername}`;
           seatno.innerText = `Seat No: ${data.seatno}`;
-          cnic.innerText = `CNIC: ${data.cnic}`;
-
+          cnicElement.innerText = `CNIC: ${data.cnic}`;
           slipContainer.style.display = 'block';
         })
         .catch(error => {
@@ -130,5 +121,4 @@
   </script>
 </body>
 </html>
-
 
