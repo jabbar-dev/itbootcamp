@@ -17,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/jabbar-dev/itbootcamp/issues"
   },
-  "homepage": "https://github.com/jabbar-dev/itbootcamp#readme"
+  "homepage": "https://github.com/jabbar-dev/itbootcamp#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
 }
