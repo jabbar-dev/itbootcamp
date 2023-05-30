@@ -1,0 +1,21 @@
+{
+  "name": "itbootcamp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jabbar-dev/itbootcamp.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jabbar-dev/itbootcamp/issues"
+  },
+  "homepage": "https://github.com/jabbar-dev/itbootcamp#readme"
+}
