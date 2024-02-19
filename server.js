@@ -13,6 +13,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+app.use(cors());
 
 // Connect to MongoDB Atlas
 mongoose.connect('mongodb+srv://rashdijabbar:Dumnup-3middu-degfaw@cluster0.klmdea0.mongodb.net/slipdb?retryWrites=true&w=majority', {

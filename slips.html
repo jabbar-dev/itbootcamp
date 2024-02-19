@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Slip Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.js"></script>
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+      }
+      .grid-container-new {
+        display: grid;
+        grid-template-columns: auto auto;
+      }
+      .grid-item-new {
+        border: 1px solid rgba(0, 0, 0);
+        padding: 2px;
+        font-size: 15px;
+        text-align: center;
+      }
+      .item1 {
+        grid-area: header;
+        font-weight: bold;
+        text-decoration: underline;
+        text-align: center;
+      }
+      .item2 {
+        grid-area: menu;
+      }
+      .item3 {
+        grid-area: main;
+        font-weight: bold;
+        text-align: left;
+      }
+      .item5 {
+        grid-area: footer;
+      }
+      .grid-container {
+        display: grid;
+        grid-template-areas:
+          "header header header header header header"
+          "menu main main main right right"
+          "menu footer footer footer footer footer";
+        gap: 5px;
+        padding: 5px;
+      }
+      .grid-container > div {
+        padding: 15px 0;
+        font-size: 20px;
+      }
+      .form-container {
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+      }
+      .form-container input[type="text"] {
+        width: 94%;
+        padding: 10px;
+        margin-bottom: 10px;
+      }
+      .form-container button {
+        width: 100%;
+        padding: 10px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }
+      .slip-container {
+        max-width: 500px;
+        margin: 20px auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-width: 4px;
+      }
+      .slip-container img {
+        max-width: 200px;
+        margin-bottom: 10px;
+      }
+      .print-button {
+        text-align: center;
+        padding-top: 20px;
+        border-top: 1px solid #ccc;
+        font-weight: bold;
+      }
+
+      /* Print Styles */
+      @media print {
+        body {
+          font-size: 12px;
+        }
+        .form-container,
+        .print-button {
+          display: none;
+        }
+        .slip-container {
+          border-width: 0;
+        }
+        .header-slip {
+          display: flex;
+          align-items: center;
+        }
+        .header-slip img {
+          max-width: 80px;
+          margin-bottom: 10px;
+        }
+        .item1,
+        .item2,
+        .item3,
+        .item5 {
+          text-align: center;
+        }
+        .item1 {
+          font-size: 20px;
+          font-weight: bold;
+          text-decoration: underline;
+          margin-top: 10px;
+        }
+        .item2 {
+          display: none;
+        }
+        .item3 p,
+        .item5 p {
+
+            margin: 5px 0;
+}
+.grid-container-new {
+margin-top: 10px;
+}
+.grid-item-new {
+font-size: 12px;
+padding: 0;
+}
+.grid-item-new p {
+margin: 0;
+padding: 2px;
+}
+.item5 {
+margin-top: 0;
+}
+.item5 p {
+font-size: 15px;
+margin: 0;
+padding: 2px;
+}
+.slip-container {
+padding: 10px;
+}
+}
+</style>
+
+  </head>
+  <!-- Rest of the HTML code remains the same -->
+  <body>
+    <div class="form-container">
+      <input type="text" id="cnicInput" placeholder="Enter CNIC" />
+      <button onclick="generateSlip()">Generate Slip</button>
+    </div>
+
+    <div class="slip-container" id="slipContainer" style="display: none">
+        
+        <div>
+          <div class="header-slip" style="display: flex">
+            <img
+              src="logo.jpg"
+              alt="STS Logo"
+              width="100px"
+            />
+      
+            <div>
+              <p
+                class="float-left"
+                style="
+                  margin-left: 20px;
+                  margin-top: -20;
+                  font-size: 30px;
+                  font-weight: bold;
+                "
+              >
+                SUKKUR IBA UNIVERSITY
+              </p>
+              <p
+                class="float-left"
+                style="margin-left: 55px; margin-top: -25px; font-weight: bold; font-size: 12px"
+              >
+                IT INDUSTRY READINESS BOOTCAMP PROGRAM
+              </p>
+            </div>
+          </div>
+      
+          <div class="grid-container">
+            <div class="item1">CANDIDATE ADMIT SLIP</div>
+            <div class="item2">
+              <img id="pic" src="" alt="Slip Image" width="100px" height="100px" />
+            </div>
+            <div class="item3">
+              <p id="name"></p>
+              <p id="fathername"></p>
+              <p id="cnic"></p>
+            </div>
+            <div
+              class="item5"
+              style="display: flex; margin-top: -50px; font-weight: bold; padding: 0%; text-align: center; gap: 0px; font-size: 20px;"
+            >
+              <p id="block" style="border: 1px solid; padding: 10px;"></p>
+              <p id="seatno" style="border: 1px solid;padding: 10px;"></p>
+            </div>
+          </div>
+          <div class="grid-container-new">
+            <div class="grid-item-new" style="font-weight: bold;">Screening Test</div>
+            <div class="grid-item-new" style="font-weight: bold;">Date & Time</div>
+            <div class="grid-item-new">
+              <p style="font-size: 13px; padding: 1px;">IT Industry Readiness Bootcamp Program</p>
+            </div>
+            <div class="grid-item-new">
+              <p id="datentime" style="font-size: 15px; padding: 0px;">
+              </p>
+            </div>
+        </div>
+        <div style="text-align: center; font-weight: bold; font-size: 15px;">
+          <p id="center"></p>
+        </div>
+        <div style="text-align: center; font-weight: bold; font-size: 15px; margin-top: 10px;">
+          <p>FOR ANY QUERIES</p>
+        </div>
+        <div
+          style="text-align: center; font-weight: bold;margin-top: -5px; border: 1px solid blue; font-size: 15px; background-color: black; color: white;"
+        >
+          <p>CONTACT AT: 071-5644118 | 071-5644418 | 071-5644235</p>
+        </div>
+      </div>
+      
+    
+    </div>
+    
+    <div class="print-button">
+        <center>
+      <button id="saveAsPdfButton" onclick="saveAsPDF()" style="width: 20%;padding: 10px;background-color: #00008B;color: white;border: none;cursor: pointer; display: none;">Save as PDF</center></button>
+
+    </div>
+    <div id="loadingMessage" style="display: none; text-align: center; font-weight: bold; font-size: 15px; margin-top: 20px;">
+    Loading...
+  </div>
+   <script>
+  function saveAsPDF() {
+    const slipContainer = document.getElementById("slipContainer");
+    const containerClone = slipContainer.cloneNode(true);
+
+    // Remove inline styles that hide the container
+    containerClone.style.display = "block";
+    containerClone.style.padding = "";
+
+    // Generate the PDF
+    html2pdf()
+      .set({
+        margin: [10, 10, 10, 10], // Set margins (top, left, bottom, right)
+        filename: "slip.pdf", // Set the filename of the PDF
+        image: { type: "jpeg", quality: 0.98 }, // Set image options (type and quality)
+        html2canvas: { dpi: 192, letterRendering: true },
+        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }, // Set PDF options (unit, format, and orientation)
+      })
+      .from(containerClone) // Convert the container to PDF
+      .save(); // Save the PDF file
+  }
+
+function generateSlip() {
+  const cnicInput = document.getElementById("cnicInput");
+  const cnic = cnicInput.value;
+
+  const slipContainer = document.getElementById("slipContainer");
+  const loadingMessage = document.getElementById("loadingMessage");
+  const pic = document.getElementById("pic");
+  const name = document.getElementById("name");
+  const fathername = document.getElementById("fathername");
+  const seatno = document.getElementById("seatno");
+  const cnicElement = document.getElementById("cnic");
+  const block = document.getElementById("block");
+  const center = document.getElementById("center");
+  const datentime = document.getElementById("datentime");
+  const saveAsPdfButton = document.getElementById("saveAsPdfButton");
+
+  // Show loading message
+  loadingMessage.style.display = "block";
+
+  fetch(`https://it-bootcamp-092dd06321b0.herokuapp.com/slips/${cnic}`)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Record not found");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      pic.onload = function () {
+        name.innerText = `Name: ${data.name}`;
+        fathername.innerText = `Father's Name: ${data.fathername}`;
+        seatno.innerText = `Seat No: ${data.seatno}`;
+        cnicElement.innerText = `CNIC: ${data.cnic}`;
+        center.innerText = `Center: ${data.center}`;
+        block.innerText = `Block: ${data.block}`;
+        datentime.innerText =` ${data.datentime}`;
+        slipContainer.style.display = "block";
+        slipContainer.style.padding = "50px";
+        saveAsPdfButton.style.display = "block"; // Make the button visible
+
+        // Hide loading message
+        loadingMessage.style.display = "none";
+      };
+
+      pic.onerror = function () {
+        pic.style.display = "none"; // Hide the image box
+        pic.alt = "Image not found"; // Set alternative text
+        name.innerText = `Name: ${data.name}`;
+        fathername.innerText = `Father's Name: ${data.fathername}`;
+        seatno.innerText = `Seat No: ${data.seatno}`;
+        cnicElement.innerText = `CNIC: ${data.cnic}`;
+        center.innerText = `Center: ${data.center}`;
+        block.innerText = `Block: ${data.block}`;
+        datentime.innerText = `${data.datentime}`;
+        slipContainer.style.display = "block";
+        slipContainer.style.padding = "50px";
+        saveAsPdfButton.style.display = "block"; // Make the button visible
+
+
+        // Hide loading message
+        loadingMessage.style.display = "none";
+      };
+
+      pic.src = data.pic;
+    })
+    .catch((error) => {
+      console.error(error);
+      // Hide loading message
+      loadingMessage.style.display = "none";
+
+      if (error.message === "Record not found") {
+        alert("Record not found. Please try again.");
+      } else {
+        alert("Failed to generate slip. Please try again.");
+      }
+    });
+}
+
+</script>
+
+  </body>
+</html>
+          
