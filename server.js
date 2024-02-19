@@ -5,7 +5,14 @@ const cors = require('cors');
 
 const app = express();
 app.use(bodyParser.json());
-app.use(cors());
+const corsOptions = {
+  origin: 'http://localhost',
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
+  optionsSuccessStatus: 204,
+};
+
+app.use(cors(corsOptions));
 
 // Connect to MongoDB Atlas
 mongoose.connect('mongodb+srv://rashdijabbar:Dumnup-3middu-degfaw@cluster0.klmdea0.mongodb.net/slipdb?retryWrites=true&w=majority', {
